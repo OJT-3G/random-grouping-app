@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
+    "serve": "yarn export && serve ./out",
     "start": "next start",
     "lint": "next lint"
   },
@@ -19,6 +20,7 @@
     "@types/react-dom": "18.0.6",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
+    "serve": "^14.0.1",
     "typescript": "4.8.4"
   }
 }
