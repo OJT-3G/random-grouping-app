@@ -5,38 +5,33 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
 
-  const [groupNumber, setGroupNumber] = useState('');
-  const [message, setMessage] = useState('');
+  const [groupNumber, setGroupNumber] = useState(1);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const onChangeTextBox = (event: { target: { value: any; }; }) => {
+  const onChangeTextBox = (event: { target: { value: string; }; }) => {
     const targetValue = event.target.value;
-    setGroupNumber(targetValue);
+    setGroupNumber(parseInt(targetValue));
 
-    console.log(targetValue)
-
-    if ((targetValue === '') || (Number.isInteger(Number(targetValue)) && targetValue > 0)) {
-      setMessage('');
+    if (targetValue === '') {
+      setErrorMessage('グループ数を指定してください');
     } else {
-      setMessage('1以上の整数を半角で入力してください');
+      setErrorMessage('');
     }
   }
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>random-grouping-app</title>
+        <title>random grouping app</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        {/* <h1 className={styles.title}>
-          ランダムグループ分けアプリ
-        </h1> */}
 
         <div>
-          <p className={styles.description}>グループ数</p>
-          <p className={styles.errorMessage}>{message}</p>
-          <input type="text" value={groupNumber} onChange={onChangeTextBox}></input>
+          <p className={styles.label}>グループ数</p>
+          <p className={styles.errorMessage}>{errorMessage}</p>
+          <input type="number" min="1" max="20" value={groupNumber} onChange={onChangeTextBox}/>
         </div>
 
       </main>
