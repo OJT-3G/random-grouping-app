@@ -8,6 +8,9 @@ const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // グループメンバーのダミーデータ
+  let groupMember = ['ふじい','あらかわ','あさい','いいだ','いしざき','なかむら','なかしま','にしかわ','おぎや','おおさか','さんのう','たなか'];
+
   const onChangeTextBox = (event: { target: { value: string; }; }) => {
     const targetValue = event.target.value;
     setGroupNumber(parseInt(targetValue));
