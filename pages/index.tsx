@@ -28,21 +28,17 @@ const Home: NextPage = () => {
         <title>random grouping app</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
-
         <div>
           <p className={styles.label}>グループ数</p>
           <p className={styles.errorMessage}>{errorMessage}</p>
           <input type="number" min="1" max="20" value={groupNumber} onChange={onChangeTextBox}/>
         </div>
-
         <div>
           <table border = {1}>
               <thead className={styles.tableHead}>
                 <tr><th>1</th><th>2</th><th>3</th></tr>
               </thead>
-
               <tbody>
                 <tr><td>{groupMember[0]}</td><td>{groupMember[1]}</td><td>{groupMember[2]}</td></tr>
                 <tr><td>{groupMember[3]}</td><td>{groupMember[4]}</td><td>{groupMember[5]}</td></tr>
@@ -51,7 +47,6 @@ const Home: NextPage = () => {
               </tbody>
           </table>
         </div>
-
       </main>
     </div>
   )
