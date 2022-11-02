@@ -36,15 +36,31 @@ const Home: NextPage = () => {
         </div>
         <div>
           <table border = {1}>
-              <thead className={styles.tableHead}>
-                <tr><th>1</th><th>2</th><th>3</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>{groupMember[0]}</td><td>{groupMember[1]}</td><td>{groupMember[2]}</td></tr>
-                <tr><td>{groupMember[3]}</td><td>{groupMember[4]}</td><td>{groupMember[5]}</td></tr>
-                <tr><td>{groupMember[6]}</td><td>{groupMember[7]}</td><td>{groupMember[8]}</td></tr>
-                <tr><td>{groupMember[9]}</td><td>{groupMember[10]}</td><td>{groupMember[11]}</td></tr>
-              </tbody>
+            <thead className={styles.tableHead}>
+              <tr><th>1</th><th>2</th><th>3</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{groupMember[0]}</td>
+                <td>{groupMember[1]}</td>
+                <td>{groupMember[2]}</td>
+              </tr>
+              <tr>
+                <td>{groupMember[3]}</td>
+                <td>{groupMember[4]}</td>
+                <td>{groupMember[5]}</td>
+              </tr>
+              <tr>
+                <td>{groupMember[6]}</td>
+                <td>{groupMember[7]}</td>
+                <td>{groupMember[8]}</td>
+              </tr>
+              <tr>
+                <td>{groupMember[9]}</td>
+                <td>{groupMember[10]}</td>
+                <td>{groupMember[11]}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </main>
