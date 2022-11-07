@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "next lint",
-    "lint:prettier": "prettier --check --ignore-unknown \"**/*\""
+    "lint:prettier": "prettier --check --ignore-unknown \"**/*\"",
+    "fmt": "yarn fmt:eslint && yarn fmt:prettier",
+    "fmt:eslint": "next lint --fix",
+    "fmt:prettier": "prettier --write --ignore-unknown \"**/*\""
   },
   "dependencies": {
     "next": "12.3.1",
