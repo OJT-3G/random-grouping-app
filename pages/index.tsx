@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   const [errorMessage, setErrorMessage] = useState('')
 
   // グループメンバーのダミーデータ
-  const groupMember = [
+  const [groupMember] = useState([
     'ふじい',
     'あらかわ',
     'あさい',
@@ -21,11 +21,13 @@ const Home: NextPage = () => {
     'おおさか',
     'さんのう',
     'たなか',
-  ]
+  ])
 
   const onChangeTextBox = (event: { target: { value: string } }) => {
     const targetValue = event.target.value
     setGroupNumber(parseInt(targetValue))
+
+    groupMember.sort(() => 0.5 - Math.random())
 
     if (targetValue === '') {
       setErrorMessage('グループ数を指定してください')
