@@ -16,12 +16,12 @@ $ git clone git@github.com:OJT-3G/random-grouping-app.git
 ## 起動方法
 
 ```
-$ npm run dev
+$ yarn dev
 ```
 
 ## Linter
 
-ESLint でコードの静的解析を行う
+ESLint および Prettier でコードの静的解析を行う
 
 ```
 $ yarn lint
