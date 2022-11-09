@@ -3,12 +3,37 @@ import Head from 'next/head'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 
+const divideGroups = (groupNumber: number, members: string[]) => {
+  const minMemberNum = Math.floor(members.length / groupNumber)
+  const restMemberNum = members.length % groupNumber
+  let currentMemberIndex = 0
+  const groups = []
+
+  for (let i = 0; i < groupNumber; i++) {
+    const group = members.slice(
+      currentMemberIndex,
+      currentMemberIndex + minMemberNum,
+    )
+    currentMemberIndex = currentMemberIndex + minMemberNum
+
+    const shouldAddRestMember = i < restMemberNum
+    if (shouldAddRestMember) {
+      group.push(members[currentMemberIndex])
+      currentMemberIndex++
+    }
+
+    groups.push(group)
+  }
+
+  return groups
+}
+
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
   const [errorMessage, setErrorMessage] = useState('')
 
   // グループメンバーのダミーデータ
-  const [groupMember] = useState([
+  const [members] = useState([
     'ふじい',
     'あらかわ',
     'あさい',
@@ -23,45 +48,21 @@ const Home: NextPage = () => {
     'たなか',
   ])
 
-  const [group, setGroup] = useState<string[][]>([groupMember])
-
-  const randomGrouping = (groupNumber: number) => {
-    const minMemberNum = groupMember.length / groupNumber
-    const memberNumRest = groupMember.length % groupNumber
-    let currentMember = 0
-    const group = []
-
-    for (let i = 0; i < groupNumber; i++) {
-      if (i < memberNumRest) {
-        group.push(
-          groupMember.slice(currentMember, currentMember + minMemberNum + 1),
-        )
-        currentMember = currentMember + minMemberNum + 1
-      } else {
-        group.push(
-          groupMember.slice(currentMember, currentMember + minMemberNum),
-        )
-        currentMember = currentMember + minMemberNum
-      }
-    }
-
-    return group
-  }
+  const [groups, setGroups] = useState<string[][]>([members])
 
   const onChangeTextBox = (event: { target: { value: string } }) => {
-    const targetValue = event.target.value
-    setGroupNumber(parseInt(targetValue))
+    const parsedTargetValue = parseInt(event.target.value)
+    setGroupNumber(parsedTargetValue)
 
-    groupMember.sort(() => 0.5 - Math.random())
-
-    if (targetValue === '') {
+    if (isNaN(parsedTargetValue)) {
       setErrorMessage('グループ数を指定してください')
+      return
     } else {
       setErrorMessage('')
     }
 
-    setGroup(randomGrouping(parseInt(targetValue)))
-    console.log(randomGrouping(parseInt(targetValue)))
+    members.sort(() => 0.5 - Math.random())
+    setGroups(divideGroups(parsedTargetValue, members))
   }
 
   return (
@@ -93,24 +94,24 @@ const Home: NextPage = () => {
             </thead>
             <tbody>
               <tr>
-                <td>{groupMember[0]}</td>
-                <td>{groupMember[1]}</td>
-                <td>{groupMember[2]}</td>
+                <td>{members[0]}</td>
+                <td>{members[1]}</td>
+                <td>{members[2]}</td>
               </tr>
               <tr>
-                <td>{groupMember[3]}</td>
-                <td>{groupMember[4]}</td>
-                <td>{groupMember[5]}</td>
+                <td>{members[3]}</td>
+                <td>{members[4]}</td>
+                <td>{members[5]}</td>
               </tr>
               <tr>
-                <td>{groupMember[6]}</td>
-                <td>{groupMember[7]}</td>
-                <td>{groupMember[8]}</td>
+                <td>{members[6]}</td>
+                <td>{members[7]}</td>
+                <td>{members[8]}</td>
               </tr>
               <tr>
-                <td>{groupMember[9]}</td>
-                <td>{groupMember[10]}</td>
-                <td>{groupMember[11]}</td>
+                <td>{members[9]}</td>
+                <td>{members[10]}</td>
+                <td>{members[11]}</td>
               </tr>
             </tbody>
           </table>
