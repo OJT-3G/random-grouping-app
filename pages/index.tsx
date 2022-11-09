@@ -23,6 +23,31 @@ const Home: NextPage = () => {
     'たなか',
   ])
 
+  const [group, setGroup] = useState<string[][]>([groupMember])
+
+  const randomGrouping = (groupNumber: number) => {
+    const minMemberNum = groupMember.length / groupNumber
+    const memberNumRest = groupMember.length % groupNumber
+    let currentMember = 0
+    const group = []
+
+    for (let i = 0; i < groupNumber; i++) {
+      if (i < memberNumRest) {
+        group.push(
+          groupMember.slice(currentMember, currentMember + minMemberNum + 1),
+        )
+        currentMember = currentMember + minMemberNum + 1
+      } else {
+        group.push(
+          groupMember.slice(currentMember, currentMember + minMemberNum),
+        )
+        currentMember = currentMember + minMemberNum
+      }
+    }
+
+    return group
+  }
+
   const onChangeTextBox = (event: { target: { value: string } }) => {
     const targetValue = event.target.value
     setGroupNumber(parseInt(targetValue))
@@ -34,6 +59,9 @@ const Home: NextPage = () => {
     } else {
       setErrorMessage('')
     }
+
+    setGroup(randomGrouping(parseInt(targetValue)))
+    console.log(randomGrouping(parseInt(targetValue)))
   }
 
   return (
