@@ -70,7 +70,7 @@ const Home: NextPage = () => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
 
-    if (isNaN(parsedTargetValue)) {
+    if (isNaN(parsedTargetValue) || parsedTargetValue === 0) {
       setErrorMessage('グループ数を指定してください')
       return
     } else {
