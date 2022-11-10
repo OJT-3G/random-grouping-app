@@ -86,9 +86,7 @@ const Home: NextPage = () => {
     thNodes.push(<th key={`th-${i}`}>{i + 1}</th>)
   }
 
-  const transposed = transpose(groups)
-
-  const tbodyChildren = transposed.map((rowItems) => {
+  const tbodyChildren = transpose(groups).map((rowItems) => {
     const tds = rowItems.map((item) => {
       return <td key={item}>{item}</td>
     })
