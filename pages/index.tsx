@@ -28,6 +28,22 @@ const divideGroups = (groupNumber: number, members: string[]) => {
   return groups
 }
 
+const transpose = (twoDimensionalArray: string[][]) => {
+  const transposedArray: string[][] = []
+
+  for (let i = 0; i < twoDimensionalArray[0].length; i++) {
+    transposedArray[i] = []
+  }
+
+  for (let i = 0; i < twoDimensionalArray.length; i++) {
+    for (let j = 0; j < twoDimensionalArray[i].length; j++) {
+      transposedArray[j].push(twoDimensionalArray[i][j])
+    }
+  }
+
+  return transposedArray
+}
+
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
   const [errorMessage, setErrorMessage] = useState('')
@@ -65,6 +81,20 @@ const Home: NextPage = () => {
     setGroups(divideGroups(parsedTargetValue, members))
   }
 
+  const thNodes: JSX.Element[] = []
+  for (let i = 0; i < groupNumber; i++) {
+    thNodes.push(<th key={`th-${i}`}>{i + 1}</th>)
+  }
+
+  const transposed = transpose(groups)
+
+  const tbodyChildren = transposed.map((rowItems) => {
+    const tds = rowItems.map((item) => {
+      return <td key={item}>{item}</td>
+    })
+    return <tr key={rowItems[0]}>{tds}</tr>
+  })
+
   return (
     <div className={styles.container}>
       <Head>
@@ -86,34 +116,9 @@ const Home: NextPage = () => {
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
-              <tr>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-              </tr>
+              <tr>{thNodes}</tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>{members[0]}</td>
-                <td>{members[1]}</td>
-                <td>{members[2]}</td>
-              </tr>
-              <tr>
-                <td>{members[3]}</td>
-                <td>{members[4]}</td>
-                <td>{members[5]}</td>
-              </tr>
-              <tr>
-                <td>{members[6]}</td>
-                <td>{members[7]}</td>
-                <td>{members[8]}</td>
-              </tr>
-              <tr>
-                <td>{members[9]}</td>
-                <td>{members[10]}</td>
-                <td>{members[11]}</td>
-              </tr>
-            </tbody>
+            <tbody>{tbodyChildren}</tbody>
           </table>
         </div>
       </main>
