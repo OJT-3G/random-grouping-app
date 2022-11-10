@@ -3,6 +3,22 @@ import Head from 'next/head'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 
+// グループメンバーのダミーデータ
+const members = [
+  'ふじい',
+  'あらかわ',
+  'あさい',
+  'いいだ',
+  'いしざき',
+  'なかむら',
+  'なかしま',
+  'にしかわ',
+  'おぎや',
+  'おおさか',
+  'さんのう',
+  'たなか',
+]
+
 const divideGroups = (groupNumber: number, members: string[]) => {
   const minMemberNum = Math.floor(members.length / groupNumber)
   const restMemberNum = members.length % groupNumber
@@ -47,22 +63,6 @@ const transpose = (twoDimensionalArray: string[][]) => {
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
   const [errorMessage, setErrorMessage] = useState('')
-
-  // グループメンバーのダミーデータ
-  const [members] = useState([
-    'ふじい',
-    'あらかわ',
-    'あさい',
-    'いいだ',
-    'いしざき',
-    'なかむら',
-    'なかしま',
-    'にしかわ',
-    'おぎや',
-    'おおさか',
-    'さんのう',
-    'たなか',
-  ])
 
   const [groups, setGroups] = useState<string[][]>([members])
 
