@@ -3,36 +3,95 @@ import Head from 'next/head'
 import { useState } from 'react'
 import styles from '../styles/Home.module.css'
 
+// グループメンバーのダミーデータ
+const members = [
+  'ふじい',
+  'あらかわ',
+  'あさい',
+  'いいだ',
+  'いしざき',
+  'なかむら',
+  'なかしま',
+  'にしかわ',
+  'おぎや',
+  'おおさか',
+  'さんのう',
+  'たなか',
+]
+
+const divideGroups = (groupNumber: number, members: string[]) => {
+  const minMemberNum = Math.floor(members.length / groupNumber)
+  const restMemberNum = members.length % groupNumber
+  let currentMemberIndex = 0
+  const groups = []
+
+  for (let i = 0; i < groupNumber; i++) {
+    const group = members.slice(
+      currentMemberIndex,
+      currentMemberIndex + minMemberNum,
+    )
+    currentMemberIndex = currentMemberIndex + minMemberNum
+
+    const shouldAddRestMember = i < restMemberNum
+    if (shouldAddRestMember) {
+      group.push(members[currentMemberIndex])
+      currentMemberIndex++
+    }
+
+    groups.push(group)
+  }
+
+  return groups
+}
+
+const transpose = (twoDimensionalArray: string[][]) => {
+  const transposedArray: string[][] = []
+
+  for (let i = 0; i < twoDimensionalArray[0].length; i++) {
+    transposedArray[i] = []
+  }
+
+  for (let i = 0; i < twoDimensionalArray.length; i++) {
+    for (let j = 0; j < twoDimensionalArray[i].length; j++) {
+      transposedArray[j].push(twoDimensionalArray[i][j])
+    }
+  }
+
+  return transposedArray
+}
+
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
   const [errorMessage, setErrorMessage] = useState('')
 
-  // グループメンバーのダミーデータ
-  const groupMember = [
-    'ふじい',
-    'あらかわ',
-    'あさい',
-    'いいだ',
-    'いしざき',
-    'なかむら',
-    'なかしま',
-    'にしかわ',
-    'おぎや',
-    'おおさか',
-    'さんのう',
-    'たなか',
-  ]
+  const [groups, setGroups] = useState<string[][]>([members])
 
   const onChangeTextBox = (event: { target: { value: string } }) => {
-    const targetValue = event.target.value
-    setGroupNumber(parseInt(targetValue))
+    const parsedTargetValue = parseInt(event.target.value)
+    setGroupNumber(parsedTargetValue)
 
-    if (targetValue === '') {
+    if (isNaN(parsedTargetValue) || parsedTargetValue === 0) {
       setErrorMessage('グループ数を指定してください')
+      return
     } else {
       setErrorMessage('')
     }
+
+    members.sort(() => 0.5 - Math.random())
+    setGroups(divideGroups(parsedTargetValue, members))
   }
+
+  const thNodes: JSX.Element[] = []
+  for (let i = 0; i < groupNumber; i++) {
+    thNodes.push(<th key={`th-${i}`}>{i + 1}</th>)
+  }
+
+  const tbodyChildren = transpose(groups).map((rowItems) => {
+    const tds = rowItems.map((item) => {
+      return <td key={item}>{item}</td>
+    })
+    return <tr key={rowItems[0]}>{tds}</tr>
+  })
 
   return (
     <div className={styles.container}>
@@ -55,34 +114,9 @@ const Home: NextPage = () => {
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
-              <tr>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-              </tr>
+              <tr>{thNodes}</tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>{groupMember[0]}</td>
-                <td>{groupMember[1]}</td>
-                <td>{groupMember[2]}</td>
-              </tr>
-              <tr>
-                <td>{groupMember[3]}</td>
-                <td>{groupMember[4]}</td>
-                <td>{groupMember[5]}</td>
-              </tr>
-              <tr>
-                <td>{groupMember[6]}</td>
-                <td>{groupMember[7]}</td>
-                <td>{groupMember[8]}</td>
-              </tr>
-              <tr>
-                <td>{groupMember[9]}</td>
-                <td>{groupMember[10]}</td>
-                <td>{groupMember[11]}</td>
-              </tr>
-            </tbody>
+            <tbody>{tbodyChildren}</tbody>
           </table>
         </div>
       </main>
