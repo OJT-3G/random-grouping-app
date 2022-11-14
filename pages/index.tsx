@@ -106,7 +106,7 @@ const Home: NextPage = () => {
           <input
             type='number'
             min='1'
-            max='20'
+            max={members.length}
             value={groupNumber}
             onChange={onChangeTextBox}
           />
