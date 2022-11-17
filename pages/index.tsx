@@ -19,11 +19,11 @@ const members = [
   'たなか',
 ]
 
-const errorMassages = {
-  numOfGroup: {
+const errorMessages = {
+  numOfGroups: {
     mustBeSpecified: 'グループ数を指定してください',
     oneOrMore: '1以上の整数を入力してください',
-    menberNumberOrLess:
+    memberNumberOrLess:
       'メンバー数(' + members.length + ')以下の整数を入力してください',
   },
 }
@@ -80,13 +80,13 @@ const Home: NextPage = () => {
     setGroupNumber(parsedTargetValue)
 
     if (isNaN(parsedTargetValue)) {
-      setErrorMessage(errorMassages.numOfGroup['mustBeSpecified'])
+      setErrorMessage(errorMessages.numOfGroups['mustBeSpecified'])
       return
     } else if (parsedTargetValue === 0) {
-      setErrorMessage(errorMassages.numOfGroup['oneOrMore'])
+      setErrorMessage(errorMessages.numOfGroups['oneOrMore'])
       return
     } else if (parsedTargetValue > members.length) {
-      setErrorMessage(errorMassages.numOfGroup['menberNumberOrLess'])
+      setErrorMessage(errorMessages.numOfGroups['memberNumberOrLess'])
       return
     } else {
       setErrorMessage('')
