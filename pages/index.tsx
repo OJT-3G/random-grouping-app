@@ -19,6 +19,15 @@ const members = [
   'たなか',
 ]
 
+const errorMassages = {
+  numOfGroup: {
+    mustBeSpecified: 'グループ数を指定してください',
+    oneOrMore: '1以上の整数を入力してください',
+    menberNumberOrLess:
+      'メンバー数(' + members.length + ')以下の整数を入力してください',
+  },
+}
+
 const divideGroups = (groupNumber: number, members: string[]) => {
   const minMemberNum = Math.floor(members.length / groupNumber)
   const restMemberNum = members.length % groupNumber
@@ -71,15 +80,13 @@ const Home: NextPage = () => {
     setGroupNumber(parsedTargetValue)
 
     if (isNaN(parsedTargetValue)) {
-      setErrorMessage('グループ数を指定してください')
+      setErrorMessage(errorMassages.numOfGroup['mustBeSpecified'])
       return
     } else if (parsedTargetValue === 0) {
-      setErrorMessage('1以上の整数を入力してください')
+      setErrorMessage(errorMassages.numOfGroup['oneOrMore'])
       return
     } else if (parsedTargetValue > members.length) {
-      setErrorMessage(
-        'メンバー数(' + members.length + ')以下の整数を入力してください',
-      )
+      setErrorMessage(errorMassages.numOfGroup['menberNumberOrLess'])
       return
     } else {
       setErrorMessage('')
