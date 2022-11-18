@@ -19,6 +19,15 @@ const members = [
   'たなか',
 ]
 
+const errorMessages = {
+  numOfGroups: {
+    mustBeSpecified: 'グループ数を指定してください',
+    oneOrMore: '1以上の整数を入力してください',
+    memberNumberOrLess:
+      'メンバー数(' + members.length + ')以下の整数を入力してください',
+  },
+}
+
 const divideGroups = (groupNumber: number, members: string[]) => {
   const minMemberNum = Math.floor(members.length / groupNumber)
   const restMemberNum = members.length % groupNumber
@@ -70,8 +79,14 @@ const Home: NextPage = () => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
 
-    if (isNaN(parsedTargetValue) || parsedTargetValue === 0) {
-      setErrorMessage('グループ数を指定してください')
+    if (isNaN(parsedTargetValue)) {
+      setErrorMessage(errorMessages.numOfGroups['mustBeSpecified'])
+      return
+    } else if (parsedTargetValue === 0) {
+      setErrorMessage(errorMessages.numOfGroups['oneOrMore'])
+      return
+    } else if (parsedTargetValue > members.length) {
+      setErrorMessage(errorMessages.numOfGroups['memberNumberOrLess'])
       return
     } else {
       setErrorMessage('')
@@ -106,7 +121,7 @@ const Home: NextPage = () => {
           <input
             type='number'
             min='1'
-            max='20'
+            max={members.length}
             value={groupNumber}
             onChange={onChangeTextBox}
           />
