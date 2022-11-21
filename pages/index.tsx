@@ -101,7 +101,7 @@ const Home: NextPage = () => {
   const viewMemberList: JSX.Element[] = []
   for (let i = 0; i < members.length; i++) {
     viewMemberList.push(
-      <tr key={members[i]}>
+      <tr>
         <td>{members[i]}</td>
       </tr>,
     )
