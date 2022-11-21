@@ -123,7 +123,7 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <div>
-          <p className={styles.label}>グループ数</p>
+          <p>グループ数</p>
           <p className={styles.errorMessage}>{errorMessage}</p>
           <input
             type='number'
