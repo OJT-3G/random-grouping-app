@@ -103,12 +103,12 @@ const Home: NextPage = () => {
     viewMemberList.push(<tr key={members[i]}><td>{members[i]}</td></tr>)
   }
 
-  const thNodes: JSX.Element[] = []
+  const viewGroupingTitle: JSX.Element[] = []
   for (let i = 0; i < groupNumber; i++) {
-    thNodes.push(<th key={`th-${i}`}>{i + 1}</th>)
+    viewGroupingTitle.push(<th key={`th-${i}`}>{i + 1}</th>)
   }
 
-  const tbodyChildren = transpose(groups).map((rowItems) => {
+  const viewGroupingResults = transpose(groups).map((rowItems) => {
     const tds = rowItems.map((item) => {
       return <td key={item}>{item}</td>
     })
@@ -146,9 +146,9 @@ const Home: NextPage = () => {
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
-              <tr>{thNodes}</tr>
+              <tr>{viewGroupingTitle}</tr>
             </thead>
-            <tbody>{tbodyChildren}</tbody>
+            <tbody>{viewGroupingResults}</tbody>
           </table>
         </div>
       </main>
