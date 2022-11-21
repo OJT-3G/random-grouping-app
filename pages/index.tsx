@@ -98,21 +98,21 @@ const Home: NextPage = () => {
     setGroups(divideGroups(parsedTargetValue, randomMembers))
   }
 
-  const viewMemberList: JSX.Element[] = []
+  const memberNames: JSX.Element[] = []
   for (let i = 0; i < members.length; i++) {
-    viewMemberList.push(
+    memberNames.push(
       <tr>
         <td>{members[i]}</td>
       </tr>,
     )
   }
 
-  const viewGroupingTitle: JSX.Element[] = []
+  const groupNames: JSX.Element[] = []
   for (let i = 0; i < groupNumber; i++) {
-    viewGroupingTitle.push(<th key={`th-${i}`}>{i + 1}</th>)
+    groupNames.push(<th key={`th-${i}`}>{i + 1}</th>)
   }
 
-  const viewGroupingResults = transpose(groups).map((rowItems) => {
+  const groupMemberNames = transpose(groups).map((rowItems) => {
     const tds = rowItems.map((item) => {
       return <td key={item}>{item}</td>
     })
@@ -145,16 +145,16 @@ const Home: NextPage = () => {
                 <th>名前</th>
               </tr>
             </thead>
-            <tbody>{viewMemberList}</tbody>
+            <tbody>{memberNames}</tbody>
           </table>
         </div>
         <p>グループ分け結果</p>
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
-              <tr>{viewGroupingTitle}</tr>
+              <tr>{groupNames}</tr>
             </thead>
-            <tbody>{viewGroupingResults}</tbody>
+            <tbody>{groupMemberNames}</tbody>
           </table>
         </div>
       </main>
