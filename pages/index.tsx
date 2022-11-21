@@ -19,6 +19,8 @@ const members = [
   'たなか',
 ]
 
+const randomMembers = [...members]
+
 const errorMessages = {
   numOfGroups: {
     mustBeSpecified: 'グループ数を指定してください',
@@ -92,8 +94,13 @@ const Home: NextPage = () => {
       setErrorMessage('')
     }
 
-    members.sort(() => 0.5 - Math.random())
-    setGroups(divideGroups(parsedTargetValue, members))
+    randomMembers.sort(() => 0.5 - Math.random())
+    setGroups(divideGroups(parsedTargetValue, randomMembers))
+  }
+
+  const viewMemberList: JSX.Element[] = []
+  for (let i = 0; i < members.length; i++) {
+    viewMemberList.push(<tr key={members[i]}><td>{members[i]}</td></tr>)
   }
 
   const thNodes: JSX.Element[] = []
@@ -126,6 +133,16 @@ const Home: NextPage = () => {
             onChange={onChangeTextBox}
           />
         </div>
+        <p>メンバー一覧</p>
+        <div>
+          <table border={1}>
+            <thead className={styles.tableHead}>
+              <tr><th>名前</th></tr>
+            </thead>
+            <tbody>{viewMemberList}</tbody>
+          </table>
+        </div>
+        <p>グループ分け結果</p>
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
