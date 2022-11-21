@@ -100,7 +100,11 @@ const Home: NextPage = () => {
 
   const viewMemberList: JSX.Element[] = []
   for (let i = 0; i < members.length; i++) {
-    viewMemberList.push(<tr key={members[i]}><td>{members[i]}</td></tr>)
+    viewMemberList.push(
+      <tr key={members[i]}>
+        <td>{members[i]}</td>
+      </tr>,
+    )
   }
 
   const viewGroupingTitle: JSX.Element[] = []
@@ -137,7 +141,9 @@ const Home: NextPage = () => {
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
-              <tr><th>名前</th></tr>
+              <tr>
+                <th>名前</th>
+              </tr>
             </thead>
             <tbody>{viewMemberList}</tbody>
           </table>
