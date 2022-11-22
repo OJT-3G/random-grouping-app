@@ -203,6 +203,7 @@ const Home: NextPage = () => {
           <input
             type='button'
             value='追加'
+            disabled={errorMessageOfGroupNumber !== ''}
             onClick={onClickAddButton}
           />
         </div>
