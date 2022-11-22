@@ -21,12 +21,20 @@ const members = [
 
 const randomMembers = [...members]
 
-const errorMessages = {
+const errorMessagesOfGroupNumber = {
   numOfGroups: {
     mustBeSpecified: 'グループ数を指定してください',
     oneOrMore: '1以上の整数を入力してください',
     memberNumberOrLess:
       'メンバー数(' + members.length + ')以下の整数を入力してください',
+  },
+}
+
+const errorMessagesOfAdditionalMember = {
+  nameOfMembers: {
+    mustBeSpecified: '名前を入力してください',
+    mustBeSpecifiedDifferent:
+      'すでに存在する名前です、別の名前を入力してください',
   },
 }
 
@@ -73,29 +81,63 @@ const transpose = (twoDimensionalArray: string[][]) => {
 
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [additionalMember, setAdditionalMember] = useState('')
+  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
+  const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
+    useState('')
 
   const [groups, setGroups] = useState<string[][]>([members])
 
-  const onChangeTextBox = (event: { target: { value: string } }) => {
+  const onChangeGroupNumber = (event: { target: { value: string } }) => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
 
     if (isNaN(parsedTargetValue)) {
-      setErrorMessage(errorMessages.numOfGroups['mustBeSpecified'])
+      setErrorMessageOfGroupNumber(
+        errorMessagesOfGroupNumber.numOfGroups['mustBeSpecified'],
+      )
       return
     } else if (parsedTargetValue === 0) {
-      setErrorMessage(errorMessages.numOfGroups['oneOrMore'])
+      setErrorMessageOfGroupNumber(
+        errorMessagesOfGroupNumber.numOfGroups['oneOrMore'],
+      )
       return
     } else if (parsedTargetValue > members.length) {
-      setErrorMessage(errorMessages.numOfGroups['memberNumberOrLess'])
+      setErrorMessageOfGroupNumber(
+        errorMessagesOfGroupNumber.numOfGroups['memberNumberOrLess'],
+      )
       return
     } else {
-      setErrorMessage('')
+      setErrorMessageOfGroupNumber('')
     }
 
     randomMembers.sort(() => 0.5 - Math.random())
     setGroups(divideGroups(parsedTargetValue, randomMembers))
+  }
+
+  const onClickAddButton = () => {
+    if (members.indexOf(additionalMember) >= 0) {
+      setErrorMessageOfAdditionalMember(
+        errorMessagesOfAdditionalMember.nameOfMembers[
+          'mustBeSpecifiedDifferent'
+        ],
+      )
+    } else if (additionalMember === '') {
+      setErrorMessageOfAdditionalMember(
+        errorMessagesOfAdditionalMember.nameOfMembers['mustBeSpecified'],
+      )
+    } else {
+      members.push(additionalMember)
+      randomMembers.push(additionalMember)
+      setGroups(divideGroups(groupNumber, randomMembers))
+      setAdditionalMember('')
+      setErrorMessageOfAdditionalMember('')
+    }
+  }
+
+  const onChangeAdditionalMember = (event: { target: { value: string } }) => {
+    setAdditionalMember(event.target.value)
+    setErrorMessageOfAdditionalMember('')
   }
 
   const memberNames: JSX.Element[] = []
@@ -128,13 +170,13 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <div>
           <p>グループ数</p>
-          <p className={styles.errorMessage}>{errorMessage}</p>
+          <p className={styles.errorMessage}>{errorMessageOfGroupNumber}</p>
           <input
             type='number'
             min='1'
             max={members.length}
             value={groupNumber}
-            onChange={onChangeTextBox}
+            onChange={onChangeGroupNumber}
           />
         </div>
         <p>メンバー一覧</p>
@@ -147,6 +189,22 @@ const Home: NextPage = () => {
             </thead>
             <tbody>{memberNames}</tbody>
           </table>
+        </div>
+        <div>
+          <p className={styles.errorMessage}>
+            {errorMessageOfAdditionalMember}
+          </p>
+          <input
+            type='text'
+            maxLength={12}
+            value={additionalMember}
+            onChange={onChangeAdditionalMember}
+          />
+          <input
+            type='button'
+            value='追加'
+            onClick={onClickAddButton}
+          />
         </div>
         <p>グループ分け結果</p>
         <div>
