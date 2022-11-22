@@ -19,6 +19,8 @@ const members = [
   'たなか',
 ]
 
+const randomMembers = [...members]
+
 const errorMessages = {
   numOfGroups: {
     mustBeSpecified: 'グループ数を指定してください',
@@ -92,16 +94,25 @@ const Home: NextPage = () => {
       setErrorMessage('')
     }
 
-    members.sort(() => 0.5 - Math.random())
-    setGroups(divideGroups(parsedTargetValue, members))
+    randomMembers.sort(() => 0.5 - Math.random())
+    setGroups(divideGroups(parsedTargetValue, randomMembers))
   }
 
-  const thNodes: JSX.Element[] = []
+  const memberNames: JSX.Element[] = []
+  for (let i = 0; i < members.length; i++) {
+    memberNames.push(
+      <tr>
+        <td>{members[i]}</td>
+      </tr>,
+    )
+  }
+
+  const groupNames: JSX.Element[] = []
   for (let i = 0; i < groupNumber; i++) {
-    thNodes.push(<th key={`th-${i}`}>{i + 1}</th>)
+    groupNames.push(<th key={`th-${i}`}>{i + 1}</th>)
   }
 
-  const tbodyChildren = transpose(groups).map((rowItems) => {
+  const groupMemberNames = transpose(groups).map((rowItems) => {
     const tds = rowItems.map((item) => {
       return <td key={item}>{item}</td>
     })
@@ -116,7 +127,7 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <div>
-          <p className={styles.label}>グループ数</p>
+          <p>グループ数</p>
           <p className={styles.errorMessage}>{errorMessage}</p>
           <input
             type='number'
@@ -126,12 +137,24 @@ const Home: NextPage = () => {
             onChange={onChangeTextBox}
           />
         </div>
+        <p>メンバー一覧</p>
         <div>
           <table border={1}>
             <thead className={styles.tableHead}>
-              <tr>{thNodes}</tr>
+              <tr>
+                <th>名前</th>
+              </tr>
             </thead>
-            <tbody>{tbodyChildren}</tbody>
+            <tbody>{memberNames}</tbody>
+          </table>
+        </div>
+        <p>グループ分け結果</p>
+        <div>
+          <table border={1}>
+            <thead className={styles.tableHead}>
+              <tr>{groupNames}</tr>
+            </thead>
+            <tbody>{groupMemberNames}</tbody>
           </table>
         </div>
       </main>
