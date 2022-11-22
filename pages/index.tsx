@@ -143,7 +143,7 @@ const Home: NextPage = () => {
   const memberNames: JSX.Element[] = []
   for (let i = 0; i < members.length; i++) {
     memberNames.push(
-      <tr>
+      <tr key={members[i]}>
         <td>{members[i]}</td>
       </tr>,
     )
