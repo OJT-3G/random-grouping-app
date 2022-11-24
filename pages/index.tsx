@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useState } from 'react'
+import {KeyboardEvent, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 // グループメンバーのダミーデータ
@@ -133,11 +133,9 @@ const Home: NextPage = () => {
     setErrorMessageOfAdditionalMember('')
   }
 
-  const onClickEnter = () => {
-    document.onkeydown = (event) => {
-      if (event.key === 'Enter' && errorMessageOfGroupNumber == '') {
-        onClickAddButton()
-      }
+  const onClickEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && errorMessageOfGroupNumber == '') {
+      onClickAddButton()
     }
   }
 
