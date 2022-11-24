@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import {KeyboardEvent, useState } from 'react'
+import {ChangeEvent, KeyboardEvent, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 // グループメンバーのダミーデータ
@@ -85,7 +85,7 @@ const Home: NextPage = () => {
 
   const [groups, setGroups] = useState<string[][]>([members])
 
-  const onChangeGroupNumber = (event: { target: { value: string } }) => {
+  const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
 
@@ -128,7 +128,7 @@ const Home: NextPage = () => {
     setErrorMessageOfAdditionalMember('')
   }
 
-  const onChangeAdditionalMember = (event: { target: { value: string } }) => {
+  const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
     setErrorMessageOfAdditionalMember('')
   }
