@@ -140,6 +140,14 @@ const Home: NextPage = () => {
     setErrorMessageOfAdditionalMember('')
   }
 
+  const onClickEnter = () => {
+    document.onkeydown = (event) => {
+      if (event.key === 'Enter' && errorMessageOfGroupNumber == '') {
+        onClickAddButton()
+      }
+    }
+  }
+
   const memberNames: JSX.Element[] = []
   for (let i = 0; i < members.length; i++) {
     memberNames.push(
@@ -199,6 +207,7 @@ const Home: NextPage = () => {
             maxLength={12}
             value={additionalMember}
             onChange={onChangeAdditionalMember}
+            onKeyDown={onClickEnter}
           />
           <input
             type='button'
