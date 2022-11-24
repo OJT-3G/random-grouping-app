@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useState } from 'react'
+import {ChangeEvent, KeyboardEvent, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 // グループメンバーのダミーデータ
@@ -27,6 +27,11 @@ const errorMessages = {
     oneOrMore: '1以上の整数を入力してください',
     memberNumberOrLess:
       'メンバー数(' + members.length + ')以下の整数を入力してください',
+  },
+  nameOfAdditionalMember: {
+    mustBeSpecified: '名前を入力してください',
+    mustBeSpecifiedDifferent:
+      'すでに存在する名前です、別の名前を入力してください',
   },
 }
 
@@ -73,35 +78,71 @@ const transpose = (twoDimensionalArray: string[][]) => {
 
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [additionalMember, setAdditionalMember] = useState('')
+  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
+  const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
+    useState('')
 
   const [groups, setGroups] = useState<string[][]>([members])
 
-  const onChangeTextBox = (event: { target: { value: string } }) => {
+  const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
 
     if (isNaN(parsedTargetValue)) {
-      setErrorMessage(errorMessages.numOfGroups['mustBeSpecified'])
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
       return
-    } else if (parsedTargetValue === 0) {
-      setErrorMessage(errorMessages.numOfGroups['oneOrMore'])
-      return
-    } else if (parsedTargetValue > members.length) {
-      setErrorMessage(errorMessages.numOfGroups['memberNumberOrLess'])
-      return
-    } else {
-      setErrorMessage('')
     }
-
+    if (parsedTargetValue === 0) {
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.oneOrMore)
+      return
+    }
+    if (parsedTargetValue > members.length) {
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
+      return
+    }
+      
+    setErrorMessageOfGroupNumber('')
     randomMembers.sort(() => 0.5 - Math.random())
     setGroups(divideGroups(parsedTargetValue, randomMembers))
+  }
+
+  const onClickAddButton = () => {
+    if (members.indexOf(additionalMember) >= 0) {
+      setErrorMessageOfAdditionalMember(
+        errorMessages.nameOfAdditionalMember.mustBeSpecifiedDifferent,
+      )
+      return
+    }
+    if (additionalMember === '') {
+      setErrorMessageOfAdditionalMember(
+        errorMessages.nameOfAdditionalMember.mustBeSpecified,
+      )
+      return
+    }
+
+    members.push(additionalMember)
+    randomMembers.push(additionalMember)
+    setGroups(divideGroups(groupNumber, randomMembers))
+    setAdditionalMember('')
+    setErrorMessageOfAdditionalMember('')
+  }
+
+  const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
+    setAdditionalMember(event.target.value)
+    setErrorMessageOfAdditionalMember('')
+  }
+
+  const onClickEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && errorMessageOfGroupNumber == '') {
+      onClickAddButton()
+    }
   }
 
   const memberNames: JSX.Element[] = []
   for (let i = 0; i < members.length; i++) {
     memberNames.push(
-      <tr>
+      <tr key={members[i]}>
         <td>{members[i]}</td>
       </tr>,
     )
@@ -128,13 +169,13 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <div>
           <p>グループ数</p>
-          <p className={styles.errorMessage}>{errorMessage}</p>
+          <p className={styles.errorMessage}>{errorMessageOfGroupNumber}</p>
           <input
             type='number'
             min='1'
             max={members.length}
             value={groupNumber}
-            onChange={onChangeTextBox}
+            onChange={onChangeGroupNumber}
           />
         </div>
         <p>メンバー一覧</p>
@@ -147,6 +188,24 @@ const Home: NextPage = () => {
             </thead>
             <tbody>{memberNames}</tbody>
           </table>
+        </div>
+        <div>
+          <p className={styles.errorMessage}>
+            {errorMessageOfAdditionalMember}
+          </p>
+          <input
+            type='text'
+            maxLength={12}
+            value={additionalMember}
+            onChange={onChangeAdditionalMember}
+            onKeyDown={onClickEnter}
+          />
+          <input
+            type='button'
+            value='追加'
+            disabled={errorMessageOfGroupNumber !== ''}
+            onClick={onClickAddButton}
+          />
         </div>
         <p>グループ分け結果</p>
         <div>
