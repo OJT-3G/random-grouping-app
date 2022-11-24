@@ -21,17 +21,14 @@ const members = [
 
 const randomMembers = [...members]
 
-const errorMessagesOfGroupNumber = {
+const errorMessages = {
   numOfGroups: {
     mustBeSpecified: 'グループ数を指定してください',
     oneOrMore: '1以上の整数を入力してください',
     memberNumberOrLess:
       'メンバー数(' + members.length + ')以下の整数を入力してください',
   },
-}
-
-const errorMessagesOfAdditionalMember = {
-  nameOfMembers: {
+  nameOfAdditionalMember: {
     mustBeSpecified: '名前を入力してください',
     mustBeSpecifiedDifferent:
       'すでに存在する名前です、別の名前を入力してください',
@@ -93,18 +90,14 @@ const Home: NextPage = () => {
     setGroupNumber(parsedTargetValue)
 
     if (isNaN(parsedTargetValue)) {
-      setErrorMessageOfGroupNumber(
-        errorMessagesOfGroupNumber.numOfGroups['mustBeSpecified'],
-      )
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups['mustBeSpecified'])
       return
     } else if (parsedTargetValue === 0) {
-      setErrorMessageOfGroupNumber(
-        errorMessagesOfGroupNumber.numOfGroups['oneOrMore'],
-      )
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups['oneOrMore'])
       return
     } else if (parsedTargetValue > members.length) {
       setErrorMessageOfGroupNumber(
-        errorMessagesOfGroupNumber.numOfGroups['memberNumberOrLess'],
+        errorMessages.numOfGroups['memberNumberOrLess'],
       )
       return
     } else {
@@ -118,13 +111,11 @@ const Home: NextPage = () => {
   const onClickAddButton = () => {
     if (members.indexOf(additionalMember) >= 0) {
       setErrorMessageOfAdditionalMember(
-        errorMessagesOfAdditionalMember.nameOfMembers[
-          'mustBeSpecifiedDifferent'
-        ],
+        errorMessages.nameOfAdditionalMember['mustBeSpecifiedDifferent'],
       )
     } else if (additionalMember === '') {
       setErrorMessageOfAdditionalMember(
-        errorMessagesOfAdditionalMember.nameOfMembers['mustBeSpecified'],
+        errorMessages.nameOfAdditionalMember['mustBeSpecified'],
       )
     } else {
       members.push(additionalMember)
