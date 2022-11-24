@@ -92,18 +92,17 @@ const Home: NextPage = () => {
     if (isNaN(parsedTargetValue)) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
       return
-    } else if (parsedTargetValue === 0) {
+    }
+    if (parsedTargetValue === 0) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.oneOrMore)
       return
-    } else if (parsedTargetValue > members.length) {
-      setErrorMessageOfGroupNumber(
-        errorMessages.numOfGroups.memberNumberOrLess,
-      )
-      return
-    } else {
-      setErrorMessageOfGroupNumber('')
     }
-
+    if (parsedTargetValue > members.length) {
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
+      return
+    }
+      
+    setErrorMessageOfGroupNumber('')
     randomMembers.sort(() => 0.5 - Math.random())
     setGroups(divideGroups(parsedTargetValue, randomMembers))
   }
@@ -113,17 +112,20 @@ const Home: NextPage = () => {
       setErrorMessageOfAdditionalMember(
         errorMessages.nameOfAdditionalMember.mustBeSpecifiedDifferent,
       )
-    } else if (additionalMember === '') {
+      return
+    }
+    if (additionalMember === '') {
       setErrorMessageOfAdditionalMember(
         errorMessages.nameOfAdditionalMember.mustBeSpecified,
       )
-    } else {
-      members.push(additionalMember)
-      randomMembers.push(additionalMember)
-      setGroups(divideGroups(groupNumber, randomMembers))
-      setAdditionalMember('')
-      setErrorMessageOfAdditionalMember('')
+      return
     }
+
+    members.push(additionalMember)
+    randomMembers.push(additionalMember)
+    setGroups(divideGroups(groupNumber, randomMembers))
+    setAdditionalMember('')
+    setErrorMessageOfAdditionalMember('')
   }
 
   const onChangeAdditionalMember = (event: { target: { value: string } }) => {
