@@ -90,14 +90,14 @@ const Home: NextPage = () => {
     setGroupNumber(parsedTargetValue)
 
     if (isNaN(parsedTargetValue)) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups['mustBeSpecified'])
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
       return
     } else if (parsedTargetValue === 0) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups['oneOrMore'])
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.oneOrMore)
       return
     } else if (parsedTargetValue > members.length) {
       setErrorMessageOfGroupNumber(
-        errorMessages.numOfGroups['memberNumberOrLess'],
+        errorMessages.numOfGroups.memberNumberOrLess,
       )
       return
     } else {
@@ -111,11 +111,11 @@ const Home: NextPage = () => {
   const onClickAddButton = () => {
     if (members.indexOf(additionalMember) >= 0) {
       setErrorMessageOfAdditionalMember(
-        errorMessages.nameOfAdditionalMember['mustBeSpecifiedDifferent'],
+        errorMessages.nameOfAdditionalMember.mustBeSpecifiedDifferent,
       )
     } else if (additionalMember === '') {
       setErrorMessageOfAdditionalMember(
-        errorMessages.nameOfAdditionalMember['mustBeSpecified'],
+        errorMessages.nameOfAdditionalMember.mustBeSpecified,
       )
     } else {
       members.push(additionalMember)
