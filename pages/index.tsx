@@ -131,11 +131,10 @@ const Home: NextPage = () => {
   }
 
   const onClickDeleteButton = (deleteMember: string) => {
-    const startOfDeleteMember = members.indexOf(deleteMember)
-    const startOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
-    const deleteCount = 1
-    members.splice(startOfDeleteMember, deleteCount)
-    randomMembers.splice(startOfDeleteRandomMembers, deleteCount)
+    const indexOfDeleteMember = members.indexOf(deleteMember)
+    const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
+    members.splice(indexOfDeleteMember, 1)
+    randomMembers.splice(indexOfDeleteRandomMembers, 1)
     setGroups(divideGroups(groupNumber, randomMembers))
     setLengthOfMembers(members.length)
   }
