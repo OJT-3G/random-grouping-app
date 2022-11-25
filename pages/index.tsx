@@ -160,6 +160,7 @@ const Home: NextPage = () => {
           <input
             type='button'
             value='削除'
+            disabled={errorMessageOfGroupNumber !== ''}
             onClick={() => onClickDeleteButton(members[i])}
           />
         </td>
