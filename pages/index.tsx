@@ -204,7 +204,7 @@ const Home: NextPage = () => {
             <thead className={styles.tableHead}>
               <tr>
                 <th>名前</th>
-                <th></th>
+                <th/>{/* 削除ボタン用の列 */}
               </tr>
             </thead>
             <tbody>{memberNames}</tbody>
