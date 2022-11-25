@@ -128,6 +128,15 @@ const Home: NextPage = () => {
     setErrorMessageOfAdditionalMember('')
   }
 
+  const onClickDeleteButton = (deleteMember: string) => {
+    const startOfDeleteMember = members.indexOf(deleteMember)
+    const startOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
+    const deleteCount = 1
+    members.splice(startOfDeleteMember, deleteCount)
+    randomMembers.splice(startOfDeleteRandomMembers, deleteCount)
+    setGroups(divideGroups(groupNumber, randomMembers))
+  }
+
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
     setErrorMessageOfAdditionalMember('')
@@ -144,6 +153,13 @@ const Home: NextPage = () => {
     memberNames.push(
       <tr key={members[i]}>
         <td>{members[i]}</td>
+        <td>
+          <input
+            type='button'
+            value='削除'
+            onClick={() => onClickDeleteButton(members[i])}
+          />
+        </td>
       </tr>,
     )
   }
@@ -184,6 +200,7 @@ const Home: NextPage = () => {
             <thead className={styles.tableHead}>
               <tr>
                 <th>名前</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>{memberNames}</tbody>
