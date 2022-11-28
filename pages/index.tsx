@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { ChangeEvent, KeyboardEvent, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 // グループメンバーのダミーデータ
@@ -67,7 +67,7 @@ const Home: NextPage = () => {
   const [additionalMember, setAdditionalMember] = useState('')
   const [lengthOfMembers, setLengthOfMembers] = useState(members.length)
 
-  const errorMessages = {
+  const errorMessages = useMemo(() => ({
     numOfGroups: {
       mustBeSpecified: 'グループ数を指定してください',
       oneOrMore: '1以上の整数を入力してください',
@@ -80,33 +80,40 @@ const Home: NextPage = () => {
       mustBeSpecifiedDifferent:
         'すでに存在する名前です、別の名前を入力してください',
     },
-  }
+  }), [lengthOfMembers])
   const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
   const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
     useState('')
 
   const [groups, setGroups] = useState<string[][]>([members])
 
-  const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
-    const parsedTargetValue = parseInt(event.target.value)
-    setGroupNumber(parsedTargetValue)
-
-    if (isNaN(parsedTargetValue)) {
+  useEffect(() => {
+    if (lengthOfMembers === 0) {
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeAdded)
+      return
+    }
+    if (isNaN(groupNumber)) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
       return
     }
-    if (parsedTargetValue === 0) {
+    if (groupNumber === 0) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.oneOrMore)
       return
     }
-    if (parsedTargetValue > members.length) {
+    if (groupNumber > lengthOfMembers) {
+      console.log(lengthOfMembers)
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
       return
     }
 
     setErrorMessageOfGroupNumber('')
     randomMembers.sort(() => 0.5 - Math.random())
-    setGroups(divideGroups(parsedTargetValue, randomMembers))
+    setGroups(divideGroups(groupNumber, randomMembers))
+  }, [groupNumber, lengthOfMembers, errorMessages])
+
+  const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
+    const parsedTargetValue = parseInt(event.target.value)
+    setGroupNumber(parsedTargetValue)
   }
 
   const onClickAddButton = () => {
@@ -139,11 +146,6 @@ const Home: NextPage = () => {
     randomMembers.splice(indexOfDeleteRandomMembers, 1)
     setGroups(divideGroups(groupNumber, randomMembers))
     setLengthOfMembers(members.length)
-
-    if (members.length === 0) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeAdded)
-      return
-    }
   }
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
