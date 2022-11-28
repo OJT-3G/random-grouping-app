@@ -101,7 +101,6 @@ const Home: NextPage = () => {
       return
     }
     if (groupNumber > lengthOfMembers) {
-      console.log(lengthOfMembers)
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
       return
     }
