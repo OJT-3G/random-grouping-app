@@ -73,7 +73,7 @@ const Home: NextPage = () => {
       oneOrMore: '1以上の整数を入力してください',
       memberNumberOrLess:
         'メンバー数(' + lengthOfMembers + ')以下の整数を入力してください',
-      mustBeAdded: 'メンバーがいません。追加してください',
+      mustBeAdded: 'メンバーがいません、追加してください',
     },
     nameOfAdditionalMember: {
       mustBeSpecified: '名前を入力してください',
