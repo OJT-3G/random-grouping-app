@@ -73,6 +73,7 @@ const Home: NextPage = () => {
       oneOrMore: '1以上の整数を入力してください',
       memberNumberOrLess:
         'メンバー数(' + lengthOfMembers + ')以下の整数を入力してください',
+      mustBeAdded: 'メンバーがいません。追加してください',
     },
     nameOfAdditionalMember: {
       mustBeSpecified: '名前を入力してください',
@@ -127,6 +128,7 @@ const Home: NextPage = () => {
     setGroups(divideGroups(groupNumber, randomMembers))
     setLengthOfMembers(members.length)
     setAdditionalMember('')
+    setErrorMessageOfGroupNumber('')
     setErrorMessageOfAdditionalMember('')
   }
 
@@ -137,6 +139,11 @@ const Home: NextPage = () => {
     randomMembers.splice(indexOfDeleteRandomMembers, 1)
     setGroups(divideGroups(groupNumber, randomMembers))
     setLengthOfMembers(members.length)
+
+    if (members.length === 0) {
+      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeAdded)
+      return
+    }
   }
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
@@ -203,7 +210,8 @@ const Home: NextPage = () => {
             <thead className={styles.tableHead}>
               <tr>
                 <th>名前</th>
-                <th/>{/* 削除ボタン用の列 */}
+                <th />
+                {/* 削除ボタン用の列 */}
               </tr>
             </thead>
             <tbody>{memberNames}</tbody>
@@ -223,7 +231,7 @@ const Home: NextPage = () => {
           <input
             type='button'
             value='追加'
-            disabled={errorMessageOfGroupNumber !== ''}
+            disabled={errorMessageOfGroupNumber !== '' && members.length !== 0}
             onClick={onClickAddButton}
           />
         </div>
