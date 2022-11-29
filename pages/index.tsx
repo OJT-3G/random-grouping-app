@@ -202,6 +202,7 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
+            disabled={errorMessageOfGroupNumber === errorMessages.numOfGroups.mustBeAdded}
             onChange={onChangeGroupNumber}
           />
         </div>
