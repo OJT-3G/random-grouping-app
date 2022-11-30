@@ -73,12 +73,12 @@ const Home: NextPage = () => {
       oneOrMore: '1以上の整数を入力してください',
       memberNumberOrLess:
         'メンバー数(' + lengthOfMembers + ')以下の整数を入力してください',
-      mustBeAdded: 'メンバーがいません、追加してください',
     },
     nameOfAdditionalMember: {
       mustBeSpecified: '名前を入力してください',
       mustBeSpecifiedDifferent:
         'すでに存在する名前です、別の名前を入力してください',
+      mustBeAdded: 'メンバーがいません、追加してください',
     },
   }), [lengthOfMembers])
   const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
@@ -89,7 +89,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (lengthOfMembers === 0) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeAdded)
+      setErrorMessageOfAdditionalMember(errorMessages.nameOfAdditionalMember.mustBeAdded)
       return
     }
     if (isNaN(groupNumber)) {
@@ -202,7 +202,7 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
-            disabled={errorMessageOfGroupNumber === errorMessages.numOfGroups.mustBeAdded}
+            disabled={errorMessageOfAdditionalMember === errorMessages.nameOfAdditionalMember.mustBeAdded}
             onChange={onChangeGroupNumber}
           />
         </div>
