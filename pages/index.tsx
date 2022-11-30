@@ -207,7 +207,7 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
-            disabled={errorMessageOfAdditionalMember === errorMessages.nameOfAdditionalMember.mustBeAdded}
+            disabled={errorMessageOfAdditionalMember !== ''}
             onChange={onChangeGroupNumber}
           />
         </div>
@@ -238,7 +238,7 @@ const Home: NextPage = () => {
           <input
             type='button'
             value='追加'
-            disabled={errorMessageOfGroupNumber !== '' && members.length !== 0}
+            disabled={errorMessageOfGroupNumber !== ''}
             onClick={onClickAddButton}
           />
         </div>
