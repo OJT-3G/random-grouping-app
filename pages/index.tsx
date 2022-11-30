@@ -149,7 +149,12 @@ const Home: NextPage = () => {
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
-    setErrorMessageOfAdditionalMember('')
+    if (
+      errorMessageOfAdditionalMember !==
+      errorMessages.nameOfAdditionalMember.mustBeAdded
+    ) {
+      setErrorMessageOfAdditionalMember('')
+    }
   }
 
   const onClickEnter = (event: KeyboardEvent<HTMLInputElement>) => {
