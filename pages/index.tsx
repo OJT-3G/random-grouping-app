@@ -154,7 +154,6 @@ const Home: NextPage = () => {
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
-
   }
 
   const onClickEnter = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -172,7 +171,10 @@ const Home: NextPage = () => {
           <input
             type='button'
             value='削除'
-            disabled={errorMessageOfGroupNumber !== '' || errorMessageOfAdditionalMember !== ''}
+            disabled={
+              errorMessageOfGroupNumber !== '' ||
+              errorMessageOfAdditionalMember !== ''
+            }
             onClick={() => onClickDeleteButton(members[i])}
           />
         </td>
