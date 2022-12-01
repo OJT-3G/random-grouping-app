@@ -186,10 +186,7 @@ const Home: NextPage = () => {
           <input
             type='button'
             value='削除'
-            disabled={
-              errorMessageOfAdditionalMember ===
-              errorMessages.nameOfAdditionalMember.mustBeAdded
-            }
+            disabled={errorMessageOfGroupNumber !== ''}
             onClick={() => onClickDeleteButton(members[i])}
           />
         </td>
@@ -224,6 +221,7 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
+            disabled={errorMessageOfAdditionalMember === errorMessages.nameOfAdditionalMember.mustBeAdded}
             onChange={onChangeGroupNumber}
           />
         </div>
