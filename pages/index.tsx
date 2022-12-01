@@ -99,6 +99,7 @@ const Home: NextPage = () => {
     }
     if (isNaN(groupNumber)) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
+      setErrorMessageOfAdditionalMember('')
       return
     }
     if (groupNumber === 0) {
@@ -107,10 +108,12 @@ const Home: NextPage = () => {
     }
     if (groupNumber > lengthOfMembers) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
+      setErrorMessageOfAdditionalMember('')
       return
     }
 
     setErrorMessageOfGroupNumber('')
+    setErrorMessageOfAdditionalMember('')
     randomMembers.sort(() => 0.5 - Math.random())
     setGroups(divideGroups(groupNumber, randomMembers))
   }, [groupNumber, lengthOfMembers, errorMessages])
@@ -155,6 +158,7 @@ const Home: NextPage = () => {
     randomMembers.splice(indexOfDeleteRandomMembers, 1)
     setGroups(divideGroups(groupNumber, randomMembers))
     setLengthOfMembers(members.length)
+    setErrorMessageOfAdditionalMember('')
   }
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
