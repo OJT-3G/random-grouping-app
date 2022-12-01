@@ -128,9 +128,14 @@ const Home: NextPage = () => {
       return
     }
     if (additionalMember === '') {
-      setErrorMessageOfAdditionalMember(
-        errorMessages.nameOfAdditionalMember.mustBeSpecified,
-      )
+      if (
+        errorMessageOfAdditionalMember !==
+        errorMessages.nameOfAdditionalMember.mustBeAdded
+      ) {
+        setErrorMessageOfAdditionalMember(
+          errorMessages.nameOfAdditionalMember.mustBeSpecified,
+        )
+      }
       return
     }
 
@@ -154,6 +159,12 @@ const Home: NextPage = () => {
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
+    if (
+      errorMessageOfAdditionalMember !==
+      errorMessages.nameOfAdditionalMember.mustBeAdded
+    ) {
+      setErrorMessageOfAdditionalMember('')
+    }
   }
 
   const onClickEnter = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -172,8 +183,8 @@ const Home: NextPage = () => {
             type='button'
             value='削除'
             disabled={
-              errorMessageOfGroupNumber !== '' ||
-              errorMessageOfAdditionalMember !== ''
+              errorMessageOfAdditionalMember ===
+              errorMessages.nameOfAdditionalMember.mustBeAdded
             }
             onClick={() => onClickDeleteButton(members[i])}
           />
@@ -209,7 +220,6 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
-            disabled={errorMessageOfAdditionalMember !== ''}
             onChange={onChangeGroupNumber}
           />
         </div>
