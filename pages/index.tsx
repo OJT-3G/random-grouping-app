@@ -91,6 +91,7 @@ const Home: NextPage = () => {
   const [groups, setGroups] = useState<string[][]>([members])
 
   useEffect(() => {
+    setErrorMessageOfAdditionalMember('')
     if (lengthOfMembers === 0) {
       setErrorMessageOfAdditionalMember(
         errorMessages.nameOfAdditionalMember.mustBeAdded,
@@ -99,7 +100,6 @@ const Home: NextPage = () => {
     }
     if (isNaN(groupNumber)) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
-      setErrorMessageOfAdditionalMember('')
       return
     }
     if (groupNumber === 0) {
@@ -108,12 +108,10 @@ const Home: NextPage = () => {
     }
     if (groupNumber > lengthOfMembers) {
       setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
-      setErrorMessageOfAdditionalMember('')
       return
     }
 
     setErrorMessageOfGroupNumber('')
-    setErrorMessageOfAdditionalMember('')
     randomMembers.sort(() => 0.5 - Math.random())
     setGroups(divideGroups(groupNumber, randomMembers))
   }, [groupNumber, lengthOfMembers, errorMessages])
