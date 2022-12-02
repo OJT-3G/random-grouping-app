@@ -98,20 +98,23 @@ const Home: NextPage = () => {
       )
       return
     }
+    let errorMessage = ''
     if (isNaN(groupNumber)) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
-      return
+      errorMessage = errorMessages.numOfGroups.mustBeSpecified
     }
     if (groupNumber === 0) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.oneOrMore)
-      return
+      errorMessage = errorMessages.numOfGroups.oneOrMore
     }
     if (groupNumber > lengthOfMembers) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
+      errorMessage = errorMessages.numOfGroups.memberNumberOrLess
+    }
+
+    setErrorMessageOfGroupNumber(errorMessage)
+
+    if(errorMessage !== ''){
       return
     }
 
-    setErrorMessageOfGroupNumber('')
     randomMembers.sort(() => 0.5 - Math.random())
     setGroups(divideGroups(groupNumber, randomMembers))
   }, [groupNumber, lengthOfMembers, errorMessages])
