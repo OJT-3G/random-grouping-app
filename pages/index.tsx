@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import {ChangeEvent, KeyboardEvent, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 // グループメンバーのダミーデータ
@@ -20,20 +20,6 @@ const members = [
 ]
 
 const randomMembers = [...members]
-
-const errorMessages = {
-  numOfGroups: {
-    mustBeSpecified: 'グループ数を指定してください',
-    oneOrMore: '1以上の整数を入力してください',
-    memberNumberOrLess:
-      'メンバー数(' + members.length + ')以下の整数を入力してください',
-  },
-  nameOfAdditionalMember: {
-    mustBeSpecified: '名前を入力してください',
-    mustBeSpecifiedDifferent:
-      'すでに存在する名前です、別の名前を入力してください',
-  },
-}
 
 const divideGroups = (groupNumber: number, members: string[]) => {
   const minMemberNum = Math.floor(members.length / groupNumber)
@@ -79,32 +65,63 @@ const transpose = (twoDimensionalArray: string[][]) => {
 const Home: NextPage = () => {
   const [groupNumber, setGroupNumber] = useState(1)
   const [additionalMember, setAdditionalMember] = useState('')
+  const [lengthOfMembers, setLengthOfMembers] = useState(members.length)
+
+  const errorMessages = useMemo(
+    () => ({
+      numOfGroups: {
+        mustBeSpecified: 'グループ数を指定してください',
+        oneOrMore: '1以上の整数を入力してください',
+        memberNumberOrLess:
+          'メンバー数(' + lengthOfMembers + ')以下の整数を入力してください',
+      },
+      nameOfAdditionalMember: {
+        mustBeSpecified: '名前を入力してください',
+        mustBeSpecifiedDifferent:
+          'すでに存在する名前です、別の名前を入力してください',
+        mustBeAdded: 'メンバーがいません、追加してください',
+      },
+    }),
+    [lengthOfMembers],
+  )
   const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
   const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
     useState('')
 
   const [groups, setGroups] = useState<string[][]>([members])
 
+  useEffect(() => {
+    setErrorMessageOfAdditionalMember('')
+    if (lengthOfMembers === 0) {
+      setErrorMessageOfAdditionalMember(
+        errorMessages.nameOfAdditionalMember.mustBeAdded,
+      )
+      return
+    }
+    let errorMessage = ''
+    if (isNaN(groupNumber)) {
+      errorMessage = errorMessages.numOfGroups.mustBeSpecified
+    }
+    if (groupNumber === 0) {
+      errorMessage = errorMessages.numOfGroups.oneOrMore
+    }
+    if (groupNumber > lengthOfMembers) {
+      errorMessage = errorMessages.numOfGroups.memberNumberOrLess
+    }
+
+    setErrorMessageOfGroupNumber(errorMessage)
+
+    if (errorMessage !== '') {
+      return
+    }
+
+    randomMembers.sort(() => 0.5 - Math.random())
+    setGroups(divideGroups(groupNumber, randomMembers))
+  }, [groupNumber, lengthOfMembers, errorMessages])
+
   const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
-
-    if (isNaN(parsedTargetValue)) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.mustBeSpecified)
-      return
-    }
-    if (parsedTargetValue === 0) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.oneOrMore)
-      return
-    }
-    if (parsedTargetValue > members.length) {
-      setErrorMessageOfGroupNumber(errorMessages.numOfGroups.memberNumberOrLess)
-      return
-    }
-      
-    setErrorMessageOfGroupNumber('')
-    randomMembers.sort(() => 0.5 - Math.random())
-    setGroups(divideGroups(parsedTargetValue, randomMembers))
   }
 
   const onClickAddButton = () => {
@@ -115,22 +132,42 @@ const Home: NextPage = () => {
       return
     }
     if (additionalMember === '') {
-      setErrorMessageOfAdditionalMember(
-        errorMessages.nameOfAdditionalMember.mustBeSpecified,
-      )
+      if (isExistMembers()) {
+        setErrorMessageOfAdditionalMember(
+          errorMessages.nameOfAdditionalMember.mustBeSpecified,
+        )
+      }
       return
     }
 
     members.push(additionalMember)
     randomMembers.push(additionalMember)
     setGroups(divideGroups(groupNumber, randomMembers))
+    setLengthOfMembers(members.length)
     setAdditionalMember('')
+    setErrorMessageOfGroupNumber('')
+    setErrorMessageOfAdditionalMember('')
+  }
+
+  const isExistMembers = () => {
+    return lengthOfMembers !== 0
+  }
+
+  const onClickDeleteButton = (deleteMember: string) => {
+    const indexOfDeleteMember = members.indexOf(deleteMember)
+    const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
+    members.splice(indexOfDeleteMember, 1)
+    randomMembers.splice(indexOfDeleteRandomMembers, 1)
+    setGroups(divideGroups(groupNumber, randomMembers))
+    setLengthOfMembers(members.length)
     setErrorMessageOfAdditionalMember('')
   }
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
-    setErrorMessageOfAdditionalMember('')
+    if (isExistMembers()) {
+      setErrorMessageOfAdditionalMember('')
+    }
   }
 
   const onClickEnter = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -144,6 +181,14 @@ const Home: NextPage = () => {
     memberNames.push(
       <tr key={members[i]}>
         <td>{members[i]}</td>
+        <td>
+          <input
+            type='button'
+            value='削除'
+            disabled={errorMessageOfGroupNumber !== ''}
+            onClick={() => onClickDeleteButton(members[i])}
+          />
+        </td>
       </tr>,
     )
   }
@@ -175,6 +220,7 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
+            disabled={!isExistMembers()}
             onChange={onChangeGroupNumber}
           />
         </div>
@@ -184,6 +230,8 @@ const Home: NextPage = () => {
             <thead className={styles.tableHead}>
               <tr>
                 <th>名前</th>
+                <th />
+                {/* 削除ボタン用の列 */}
               </tr>
             </thead>
             <tbody>{memberNames}</tbody>
