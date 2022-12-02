@@ -129,10 +129,7 @@ const Home: NextPage = () => {
       return
     }
     if (additionalMember === '') {
-      if (
-        errorMessageOfAdditionalMember !==
-        errorMessages.nameOfAdditionalMember.mustBeAdded
-      ) {
+      if (whetherMemberIsNecessary()) {
         setErrorMessageOfAdditionalMember(
           errorMessages.nameOfAdditionalMember.mustBeSpecified,
         )
@@ -149,6 +146,11 @@ const Home: NextPage = () => {
     setErrorMessageOfAdditionalMember('')
   }
 
+  const whetherMemberIsNecessary = () => {
+    const judge = errorMessageOfAdditionalMember !== errorMessages.nameOfAdditionalMember.mustBeAdded
+    return judge
+  }
+
   const onClickDeleteButton = (deleteMember: string) => {
     const indexOfDeleteMember = members.indexOf(deleteMember)
     const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
@@ -161,10 +163,7 @@ const Home: NextPage = () => {
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
-    if (
-      errorMessageOfAdditionalMember !==
-      errorMessages.nameOfAdditionalMember.mustBeAdded
-    ) {
+    if (whetherMemberIsNecessary()) {
       setErrorMessageOfAdditionalMember('')
     }
   }
@@ -219,7 +218,7 @@ const Home: NextPage = () => {
             min='1'
             max={members.length}
             value={groupNumber}
-            disabled={errorMessageOfAdditionalMember === errorMessages.nameOfAdditionalMember.mustBeAdded}
+            disabled={!whetherMemberIsNecessary()}
             onChange={onChangeGroupNumber}
           />
         </div>
