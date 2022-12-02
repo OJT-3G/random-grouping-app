@@ -111,7 +111,7 @@ const Home: NextPage = () => {
 
     setErrorMessageOfGroupNumber(errorMessage)
 
-    if(errorMessage !== ''){
+    if (errorMessage !== '') {
       return
     }
 
