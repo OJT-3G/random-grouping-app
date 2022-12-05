@@ -26,3 +26,11 @@ ESLint および Prettier でコードの静的解析を行う
 ```
 $ yarn lint
 ```
+
+## Test
+
+Jest でコードのテストを行う
+
+```
+$ yarn test
+```
