@@ -1,6 +1,7 @@
 import { describe, it } from '@jest/globals'
 
-describe('indexのテスト項目', () => {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  it('チェック内容', () => {})
+describe('グループ数入力関連のテスト', () => {
+  it('正常な入力値を入れると、ランダムなグループ分け結果が表示される', () => {
+    // 目的はテストケースの書き方の練習であり、テストコードの実装はしない
+  })
 })
