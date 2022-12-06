@@ -29,7 +29,7 @@ $ yarn lint
 
 ## Test
 
-Jest でコードのテストを行う
+Jest でテストケースの一覧を表示する(自動テストは未実装)
 
 ```
 $ yarn test
