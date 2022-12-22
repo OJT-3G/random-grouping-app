@@ -83,7 +83,7 @@ const Home: NextPage = () => {
         mustBeSpecifiedDifferent:
           'すでに存在する名前です、別の名前を入力してください',
         mustBeAdded: 'メンバーがいません、追加してください',
-        FailedToGetMemberList: 'メンバーリストの取得に失敗したため初期のメンバーリストを表示しました'
+        failedToGetMemberList: 'メンバーリストの取得に失敗したため初期のメンバーリストを表示しました'
       },
     }),
     [members],
@@ -97,10 +97,10 @@ const Home: NextPage = () => {
         setMembers([...parseSavedMemberList])
         setRandomMembers([...parseSavedMemberList])
       } catch (e) {
-        console.log('localStorageのmember_listの形式が不正')
+        console.warn('localStorageのmember_listの形式が不正')
         setMembers([...initMembers])
         setRandomMembers([...initMembers])
-        setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.FailedToGetMemberList)
+        setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.failedToGetMemberList)
       }
     }
   }, [])
@@ -184,7 +184,6 @@ const Home: NextPage = () => {
     const indexOfDeleteMember = members.indexOf(deleteMember)
     const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
     setMembers(
-      // 最後の行のメンバーを削除しない限り上手くいく
       members.filter((element) => (element !== members[indexOfDeleteMember]))
     )
     setRandomMembers(
