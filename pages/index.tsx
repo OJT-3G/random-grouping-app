@@ -68,7 +68,7 @@ const Home: NextPage = () => {
     useState('')
   const [groups, setGroups] = useState<string[][]>([initMembers])
   const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] = useState('')
-  const [flagOfStartUp, setFlagOfStartUp] = useState(true)
+  const [shouldUpdateLocalStorage, setShouldUpdateLocalStorage] = useState(false)
  
   const errorMessages = useMemo(
     () => ({
@@ -103,13 +103,12 @@ const Home: NextPage = () => {
         setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.FailedToGetMemberList)
       }
     }
-    setFlagOfStartUp(false)
   }, [])
 
   useEffect(() => {
-    // 初回起動時に初期値のinitMemberがlocalStrageにsetされてしまう事を防ぐ
-    if (!flagOfStartUp) {
+    if (shouldUpdateLocalStorage) {
       localStorage.setItem('member_list', JSON.stringify(members))
+      setShouldUpdateLocalStorage(false)
     }
   }, [members])
 
@@ -174,6 +173,7 @@ const Home: NextPage = () => {
     setErrorMessageOfGroupNumber('')
     setErrorMessageOfAdditionalMember('')
     setErrorMessageOfLocalStorage('')
+    setShouldUpdateLocalStorage(true)
   }
 
   const isExistMembers = () => {
@@ -193,6 +193,7 @@ const Home: NextPage = () => {
     setGroups(divideGroups(groupNumber, randomMembers))
     setErrorMessageOfAdditionalMember('')
     setErrorMessageOfLocalStorage('')
+    setShouldUpdateLocalStorage(true)
   }
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
