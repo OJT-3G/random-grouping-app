@@ -63,19 +63,20 @@ const Home: NextPage = () => {
   const [randomMembers, setRandomMembers] = useState([...initMembers])
   const [groupNumber, setGroupNumber] = useState(1)
   const [additionalMember, setAdditionalMember] = useState('')
-  const [lengthOfMembers, setLengthOfMembers] = useState(members.length)
   const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
   const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
     useState('')
   const [groups, setGroups] = useState<string[][]>([initMembers])
   const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] = useState('')
+  const [flagOfStartUp, setFlagOfStartUp] = useState(true)
+ 
   const errorMessages = useMemo(
     () => ({
       numOfGroups: {
         mustBeSpecified: 'グループ数を指定してください',
         oneOrMore: '1以上の整数を入力してください',
         memberNumberOrLess:
-          'メンバー数(' + lengthOfMembers + ')以下の整数を入力してください',
+          'メンバー数(' + members.length + ')以下の整数を入力してください',
       },
       nameOfAdditionalMember: {
         mustBeSpecified: '名前を入力してください',
@@ -85,7 +86,7 @@ const Home: NextPage = () => {
         FailedToGetMemberList: 'メンバーリストの取得に失敗したため初期のメンバーリストを表示しました'
       },
     }),
-    [lengthOfMembers],
+    [members],
   )
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const Home: NextPage = () => {
         setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.FailedToGetMemberList)
       }
     }
-    setLengthOfMembers([members].length)
+    setFlagOfStartUp(false)
   }, [])
 
   useEffect(() => {
@@ -117,10 +118,8 @@ const Home: NextPage = () => {
   }, [randomMembers])
 
   useEffect(() => {
-    //初回起動時のメンバーの長さが12じゃないときも12になっている
-    // setLengthOfMembers(members.length)
     setErrorMessageOfAdditionalMember('')
-    if (lengthOfMembers === 0) {
+    if (members.length === 0) {
       setErrorMessageOfAdditionalMember(
         errorMessages.nameOfAdditionalMember.mustBeAdded,
       )
@@ -133,7 +132,7 @@ const Home: NextPage = () => {
     if (groupNumber === 0) {
       errorMessage = errorMessages.numOfGroups.oneOrMore
     }
-    if (groupNumber > lengthOfMembers) {
+    if (groupNumber > members.length) {
       errorMessage = errorMessages.numOfGroups.memberNumberOrLess
     }
 
@@ -145,7 +144,7 @@ const Home: NextPage = () => {
 
     setRandomMembers((members) => members.sort(() => 0.5 - Math.random()))
     setGroups(divideGroups(groupNumber, randomMembers))
-  }, [groupNumber, lengthOfMembers, errorMessages])
+  }, [groupNumber, members, errorMessages])
 
   const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
     const parsedTargetValue = parseInt(event.target.value)
@@ -171,7 +170,6 @@ const Home: NextPage = () => {
 
     setMembers([...members, additionalMember])
     setRandomMembers([...randomMembers, additionalMember])
-    setLengthOfMembers(members.length)
     setAdditionalMember('')
     setErrorMessageOfGroupNumber('')
     setErrorMessageOfAdditionalMember('')
@@ -179,20 +177,20 @@ const Home: NextPage = () => {
   }
 
   const isExistMembers = () => {
-    return lengthOfMembers !== 0
+    return members.length !== 0
   }
 
   const onClickDeleteButton = (deleteMember: string) => {
     const indexOfDeleteMember = members.indexOf(deleteMember)
     const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
     setMembers(
+      // 最後の行のメンバーを削除しない限り上手くいく
       members.filter((element) => (element !== members[indexOfDeleteMember]))
     )
     setRandomMembers(
       randomMembers.filter((element) => (element !== randomMembers[indexOfDeleteRandomMembers]))
     )
     setGroups(divideGroups(groupNumber, randomMembers))
-    setLengthOfMembers(members.length)
     setErrorMessageOfAdditionalMember('')
     setErrorMessageOfLocalStorage('')
   }
