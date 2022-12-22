@@ -3,8 +3,7 @@ import Head from 'next/head'
 import { ChangeEvent, KeyboardEvent, useEffect, useMemo, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
-// グループメンバーのダミーデータ
-const members = [
+const initMembers = [
   'ふじい',
   'あらかわ',
   'あさい',
@@ -18,9 +17,6 @@ const members = [
   'さんのう',
   'たなか',
 ]
-
-const randomMembers = [...members]
-
 const divideGroups = (groupNumber: number, members: string[]) => {
   const minMemberNum = Math.floor(members.length / groupNumber)
   const restMemberNum = members.length % groupNumber
@@ -63,10 +59,16 @@ const transpose = (twoDimensionalArray: string[][]) => {
 }
 
 const Home: NextPage = () => {
+  const [members, setMembers] = useState([...initMembers])
+  const [randomMembers, setRandomMembers] = useState([...initMembers])
   const [groupNumber, setGroupNumber] = useState(1)
   const [additionalMember, setAdditionalMember] = useState('')
   const [lengthOfMembers, setLengthOfMembers] = useState(members.length)
-
+  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
+  const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
+    useState('')
+  const [groups, setGroups] = useState<string[][]>([initMembers])
+  const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] = useState('')
   const errorMessages = useMemo(
     () => ({
       numOfGroups: {
@@ -80,17 +82,43 @@ const Home: NextPage = () => {
         mustBeSpecifiedDifferent:
           'すでに存在する名前です、別の名前を入力してください',
         mustBeAdded: 'メンバーがいません、追加してください',
+        FailedToGetMemberList: 'メンバーリストの取得に失敗したため初期のメンバーリストを表示しました'
       },
     }),
     [lengthOfMembers],
   )
-  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
-  const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
-    useState('')
-
-  const [groups, setGroups] = useState<string[][]>([members])
 
   useEffect(() => {
+    const savedMemberList = localStorage.getItem('member_list')
+    if (savedMemberList !== null) {
+      try{
+        const parseSavedMemberList = JSON.parse(savedMemberList)
+        setMembers([...parseSavedMemberList])
+        setRandomMembers([...parseSavedMemberList])
+      } catch (e) {
+        console.log('localStorageのmember_listの形式が不正')
+        setMembers([...initMembers])
+        setRandomMembers([...initMembers])
+        setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.FailedToGetMemberList)
+      }
+    }
+    setLengthOfMembers([members].length)
+  }, [])
+
+  useEffect(() => {
+    // アプリの起動時に初期値のinitMemberをlocalStorageに入れるのを防ぐためのif文
+    if (JSON.stringify(members) !== JSON.stringify(initMembers)) {
+      localStorage.setItem('member_list', JSON.stringify(members))
+    }
+  }, [members])
+
+  useEffect(() => {
+    setGroups(divideGroups(groupNumber, randomMembers))
+  }, [randomMembers])
+
+  useEffect(() => {
+    //初回起動時のメンバーの長さが12じゃないときも12になっている
+    // setLengthOfMembers(members.length)
     setErrorMessageOfAdditionalMember('')
     if (lengthOfMembers === 0) {
       setErrorMessageOfAdditionalMember(
@@ -115,13 +143,14 @@ const Home: NextPage = () => {
       return
     }
 
-    randomMembers.sort(() => 0.5 - Math.random())
+    setRandomMembers((members) => members.sort(() => 0.5 - Math.random()))
     setGroups(divideGroups(groupNumber, randomMembers))
   }, [groupNumber, lengthOfMembers, errorMessages])
 
   const onChangeGroupNumber = (event: ChangeEvent<HTMLInputElement>) => {
     const parsedTargetValue = parseInt(event.target.value)
     setGroupNumber(parsedTargetValue)
+    setErrorMessageOfLocalStorage('')
   }
 
   const onClickAddButton = () => {
@@ -140,13 +169,13 @@ const Home: NextPage = () => {
       return
     }
 
-    members.push(additionalMember)
-    randomMembers.push(additionalMember)
-    setGroups(divideGroups(groupNumber, randomMembers))
+    setMembers([...members, additionalMember])
+    setRandomMembers([...randomMembers, additionalMember])
     setLengthOfMembers(members.length)
     setAdditionalMember('')
     setErrorMessageOfGroupNumber('')
     setErrorMessageOfAdditionalMember('')
+    setErrorMessageOfLocalStorage('')
   }
 
   const isExistMembers = () => {
@@ -156,17 +185,23 @@ const Home: NextPage = () => {
   const onClickDeleteButton = (deleteMember: string) => {
     const indexOfDeleteMember = members.indexOf(deleteMember)
     const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
-    members.splice(indexOfDeleteMember, 1)
-    randomMembers.splice(indexOfDeleteRandomMembers, 1)
+    setMembers(
+      members.filter((element) => (element !== members[indexOfDeleteMember]))
+    )
+    setRandomMembers(
+      randomMembers.filter((element) => (element !== randomMembers[indexOfDeleteRandomMembers]))
+    )
     setGroups(divideGroups(groupNumber, randomMembers))
     setLengthOfMembers(members.length)
     setErrorMessageOfAdditionalMember('')
+    setErrorMessageOfLocalStorage('')
   }
 
   const onChangeAdditionalMember = (event: ChangeEvent<HTMLInputElement>) => {
     setAdditionalMember(event.target.value)
     if (isExistMembers()) {
       setErrorMessageOfAdditionalMember('')
+      setErrorMessageOfLocalStorage('')
     }
   }
 
@@ -240,6 +275,9 @@ const Home: NextPage = () => {
         <div>
           <p className={styles.errorMessage}>
             {errorMessageOfAdditionalMember}
+          </p>
+          <p className={styles.errorMessage}>
+            {errorMessageOfLocalStorage}
           </p>
           <input
             type='text'
