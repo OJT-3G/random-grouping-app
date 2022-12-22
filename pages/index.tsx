@@ -59,16 +59,16 @@ const transpose = (twoDimensionalArray: string[][]) => {
 }
 
 const Home: NextPage = () => {
-  const [members, setMembers] = useState([...initMembers])
-  const [randomMembers, setRandomMembers] = useState([...initMembers])
-  const [groupNumber, setGroupNumber] = useState(1)
-  const [additionalMember, setAdditionalMember] = useState('')
-  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState('')
+  const [members, setMembers] = useState<string[]>([...initMembers])
+  const [randomMembers, setRandomMembers] = useState<string[]>([...initMembers])
+  const [groupNumber, setGroupNumber] = useState<number>(1)
+  const [additionalMember, setAdditionalMember] = useState<string>('')
+  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState<string>('')
   const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
-    useState('')
+    useState<string>('')
   const [groups, setGroups] = useState<string[][]>([initMembers])
-  const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] = useState('')
-  const [shouldUpdateLocalStorage, setShouldUpdateLocalStorage] = useState(false)
+  const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] = useState<string>('')
+  const [shouldUpdateLocalStorage, setShouldUpdateLocalStorage] = useState<boolean>(false)
  
   const errorMessages = useMemo(
     () => ({
