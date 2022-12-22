@@ -107,8 +107,8 @@ const Home: NextPage = () => {
   }, [])
 
   useEffect(() => {
-    // アプリの起動時に初期値のinitMemberをlocalStorageに入れるのを防ぐためのif文
-    if (JSON.stringify(members) !== JSON.stringify(initMembers)) {
+    // 初回起動時に初期値のinitMemberがlocalStrageにsetされてしまう事を防ぐ
+    if (!flagOfStartUp) {
       localStorage.setItem('member_list', JSON.stringify(members))
     }
   }, [members])
