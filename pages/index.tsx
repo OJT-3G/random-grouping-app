@@ -102,6 +102,9 @@ const Home: NextPage = () => {
         setRandomMembers([...initMembers])
         setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.failedToGetMemberList)
       }
+    } else {
+      setMembers([...initMembers])
+      setRandomMembers([...initMembers])
     }
   }, [])
 
