@@ -63,13 +63,16 @@ const Home: NextPage = () => {
   const [randomMembers, setRandomMembers] = useState<string[]>([...initMembers])
   const [groupNumber, setGroupNumber] = useState<number>(1)
   const [additionalMember, setAdditionalMember] = useState<string>('')
-  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] = useState<string>('')
+  const [errorMessageOfGroupNumber, setErrorMessageOfGroupNumber] =
+    useState<string>('')
   const [errorMessageOfAdditionalMember, setErrorMessageOfAdditionalMember] =
     useState<string>('')
   const [groups, setGroups] = useState<string[][]>([initMembers])
-  const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] = useState<string>('')
-  const [shouldUpdateLocalStorage, setShouldUpdateLocalStorage] = useState<boolean>(false)
- 
+  const [errorMessageOfLocalStorage, setErrorMessageOfLocalStorage] =
+    useState<string>('')
+  const [shouldUpdateLocalStorage, setShouldUpdateLocalStorage] =
+    useState<boolean>(false)
+
   const errorMessages = useMemo(
     () => ({
       numOfGroups: {
@@ -83,7 +86,8 @@ const Home: NextPage = () => {
         mustBeSpecifiedDifferent:
           'すでに存在する名前です、別の名前を入力してください',
         mustBeAdded: 'メンバーがいません、追加してください',
-        failedToGetMemberList: 'メンバーリストの取得に失敗したため初期のメンバーリストを表示しました'
+        failedToGetMemberList:
+          'メンバーリストの取得に失敗したため初期のメンバーリストを表示しました',
       },
     }),
     [members],
@@ -92,7 +96,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     const savedMemberList = localStorage.getItem('member_list')
     if (savedMemberList !== null) {
-      try{
+      try {
         const parseSavedMemberList = JSON.parse(savedMemberList)
         setMembers([...parseSavedMemberList])
         setRandomMembers([...parseSavedMemberList])
@@ -100,7 +104,9 @@ const Home: NextPage = () => {
         console.warn('localStorageのmember_listの形式が不正')
         setMembers([...initMembers])
         setRandomMembers([...initMembers])
-        setErrorMessageOfLocalStorage(errorMessages.nameOfAdditionalMember.failedToGetMemberList)
+        setErrorMessageOfLocalStorage(
+          errorMessages.nameOfAdditionalMember.failedToGetMemberList,
+        )
       }
     } else {
       setMembers([...initMembers])
@@ -187,10 +193,12 @@ const Home: NextPage = () => {
     const indexOfDeleteMember = members.indexOf(deleteMember)
     const indexOfDeleteRandomMembers = randomMembers.indexOf(deleteMember)
     setMembers(
-      members.filter((element) => (element !== members[indexOfDeleteMember]))
+      members.filter((element) => element !== members[indexOfDeleteMember]),
     )
     setRandomMembers(
-      randomMembers.filter((element) => (element !== randomMembers[indexOfDeleteRandomMembers]))
+      randomMembers.filter(
+        (element) => element !== randomMembers[indexOfDeleteRandomMembers],
+      ),
     )
     setGroups(divideGroups(groupNumber, randomMembers))
     setErrorMessageOfAdditionalMember('')
@@ -277,9 +285,7 @@ const Home: NextPage = () => {
           <p className={styles.errorMessage}>
             {errorMessageOfAdditionalMember}
           </p>
-          <p className={styles.errorMessage}>
-            {errorMessageOfLocalStorage}
-          </p>
+          <p className={styles.errorMessage}>{errorMessageOfLocalStorage}</p>
           <input
             type='text'
             maxLength={12}
